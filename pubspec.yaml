@@ -1,10 +1,10 @@
 name: mapbox_widget_layer
-description: Custom Flutter Widgets on top of a Mapbox Map.
-version: 0.0.1
+description: Custom Flutter Widgets on top of a Mapbox Map (package mapbox_gl). Exposes builders to reactively build widgets based on screen position, zoom, bearing, and tilt.
+version: 0.1.0
 homepage: https://github.com/dartclub/mapbox_widget_layer
 
 environment:
-  sdk: '>=2.17.5 <3.0.0'
+  sdk: ">=2.17.5 <3.0.0"
 
 dependencies:
   flutter:

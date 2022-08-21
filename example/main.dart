@@ -13,6 +13,7 @@ class MapboxWithWidgetLayer extends StatelessWidget {
     return Stack(
       children: [
         MapboxMap(
+          accessToken: 'ACCESS TOKEN',
           initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
           onMapCreated: (controller) => completer.complete(controller),
         ),

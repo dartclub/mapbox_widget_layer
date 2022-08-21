@@ -7,9 +7,11 @@ import 'package:mapbox_gl/mapbox_gl.dart';
 
 part 'mapbox_widget.dart';
 
+/// Exposes methods, to dynamically add/update/delete items during runtime.
+///
 class MapboxWidgetLayerController {
-  final Future<int> Function(MapboxItem item) addItem;
-  final Future<int> Function(int index, MapboxItem) updateItem;
+  final Future<int> Function(MapboxItemBuilder item) addItem;
+  final Future<int> Function(int index, MapboxItemBuilder) updateItem;
   final Future<void> Function(int index) deleteItem;
 
   MapboxWidgetLayerController({
@@ -19,6 +21,40 @@ class MapboxWidgetLayerController {
   });
 }
 
+/// Renders the custom widget layer.
+/// Expects a [MapboxMapController], wrapped in a [Future], to access the map movements of the underlying [MapboxMap].
+/// [onMapInteractive] provides a [MapboxWidgetLayerController], which Exposes methods
+/// to dynamically add/update/delete items during runtime
+///
+/// Usage:
+///
+/// ```dart
+///    class MapboxWithWidgetLayer extends StatelessWidget {
+///      MapboxWithWidgetLayer({Key? key}) : super(key: key);
+///      final completer = Completer<MapboxMapController>();
+///
+///      @override
+///      Widget build(BuildContext context) {
+///        return Stack(
+///          children: [
+///            MapboxMap(
+///              accessToken: 'ACCESS TOKEN',
+///              initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
+///              onMapCreated: (controller) => completer.complete(controller),
+///            ),
+///            MapboxWidgetLayer(
+///              onMapInteractive: (contorller) {},
+///              controllerFuture: completer.future,
+///              items: [
+///                // ...
+///              ],
+///            ),
+///          ],
+///        );
+///      }
+///    }
+/// ```
+///
 class MapboxWidgetLayer extends StatefulWidget {
   final Future<MapboxMapController> controllerFuture;
   final ValueChanged<MapboxWidgetLayerController>? onMapInteractive;
@@ -52,7 +88,10 @@ class _MapboxWidgetLayerState extends State<MapboxWidgetLayer> {
     });
   }
 
-  Future<int> _updateItem(int index, MapboxItem newItem) async {
+  Future<int> _updateItem(
+    int index,
+    MapboxItemBuilder newItem,
+  ) async {
     var wid = await _newWidgetFromItem(newItem, (state) {
       _markerStates[index] = state;
     });

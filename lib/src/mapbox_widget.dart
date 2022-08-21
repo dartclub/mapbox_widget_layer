@@ -1,5 +1,7 @@
 part of 'mapbox_widget_layer.dart';
 
+/// class that stores the updated [screenPosition], [zoom], [bearing], and [tilt], during movements of the underlying [MapboxMap].
+///
 class MapboxWidgetScreenPosition {
   final Point screenPosition;
   final double zoom;
@@ -14,15 +16,22 @@ class MapboxWidgetScreenPosition {
   });
 }
 
-typedef MapboxWidgetBuilderFunction = Widget Function(
+/// Callback used in the [builder] attribute in [MapboxItemBuilder].
+/// Exposes the current [BuildContext] and [MapboxWidgetScreenPosition].
+///
+typedef MapboxItemBuilderCallback = Widget Function(
   BuildContext context,
   MapboxWidgetScreenPosition screenPosition,
 );
 
+/// Exposes all attributes to manually control rendering of the widget:
+/// [screenPosition] [zoom], [bearing], and [tilt] in a [builder]-closure
+///  to reactively build widgets according to the exposed attributes.
+///
 class MapboxItemBuilder {
   final LatLng coordinate;
   final Size? size;
-  final MapboxWidgetBuilderFunction builder;
+  final MapboxItemBuilderCallback builder;
 
   MapboxItemBuilder({
     required this.builder,
@@ -31,6 +40,8 @@ class MapboxItemBuilder {
   });
 }
 
+/// Does not expose attributes to customize rendering.
+///
 class MapboxItem extends MapboxItemBuilder {
   final Widget child;
 
@@ -45,12 +56,18 @@ class MapboxItem extends MapboxItemBuilder {
         );
 }
 
+/// Auto-transforms rendering, based on the [zoom], [bearing], and [tilt] of the underlying [MapboxMap].
+/// Allows for manual control of the [zoomBase]
+/// (zoom level at which the scale of the widget should match the [size] in pixels),
+/// and [zoomExpFactor], which is the exponential base for the interpolation between zoom levels.
+/// Also allows for enabling/disabling of the different attributes ([zoomEnabled], [bearingEnabled], [tiltEnabled]).
+///
 class MapboxAutoTransformItem extends MapboxItemBuilder {
   final Widget child;
   final bool zoomEnabled;
   final bool bearingEnabled;
   final bool tiltEnabled;
-  final double zoomFactor;
+  final double zoomExpBase;
   final double zoomBase;
 
   static _expZoom(double factor, double zoom, double anchor) =>
@@ -63,28 +80,36 @@ class MapboxAutoTransformItem extends MapboxItemBuilder {
     this.zoomEnabled = true,
     this.bearingEnabled = true,
     this.tiltEnabled = true,
-    this.zoomFactor = 2,
+    this.zoomExpBase = 2,
     this.zoomBase = 18,
   }) : super(builder: (context, screenPosition) {
+          var matrix = Matrix4.identity();
+          if (tiltEnabled) {
+            matrix.rotateX(screenPosition.tilt / 360 * (2 * pi));
+          }
+          if (bearingEnabled) {
+            matrix.rotateZ(-screenPosition.bearing / 360 * (2 * pi));
+          }
+          if (zoomEnabled) {
+            matrix.scale(
+              _expZoom(zoomExpBase, screenPosition.zoom, zoomBase),
+              _expZoom(zoomExpBase, screenPosition.zoom, zoomBase),
+            );
+          }
           return Transform(
             child: child,
             alignment: FractionalOffset.center,
-            transform: Matrix4.identity()
-              ..rotateX(screenPosition.tilt / 360 * (2 * pi))
-              ..rotateZ(-screenPosition.bearing / 360 * (2 * pi))
-              ..scale(
-                _expZoom(zoomFactor, screenPosition.zoom, zoomBase),
-                _expZoom(zoomFactor, screenPosition.zoom, zoomBase),
-              ),
+            transform: matrix,
           );
         });
 }
 
+/// Used internally to control rendering and transformation of the widgets
 class MapboxWidget extends StatefulWidget {
   final MapboxWidgetScreenPosition initialScreenPosition;
   final LatLng coordinate;
   final void Function(MapboxWidgetState) addMarkerState;
-  final MapboxWidgetBuilderFunction childBuilder;
+  final MapboxItemBuilderCallback childBuilder;
   final Size? size;
 
   MapboxWidget({
