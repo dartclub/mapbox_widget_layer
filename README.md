@@ -1,8 +1,11 @@
 # mapbox_widget_layer
 
 !! May be unstable and have bad performance !!
+Custom Flutter Widgets on top of a Mapbox Map (package [mapbox_gl](https://pub.dev/packages/mapbox_gl)). Exposes builders to reactively build widgets based on screen position, zoom, bearing, and tilt.
 
-Custom flutter widgets on top of a [mapbox_gl](https://pub.dev/packages/mapbox_gl) map.
+
+https://user-images.githubusercontent.com/10634693/185800406-314cf4d4-128f-4c16-b5cf-e97035e15664.mov
+
 
 Heavily inspired by the example here: [flutter-mapbox-gl/maps > custom markers](https://github.com/flutter-mapbox-gl/maps/blob/master/example/lib/custom_marker.dart)
 
