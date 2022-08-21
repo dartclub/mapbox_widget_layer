@@ -78,7 +78,7 @@ class _MapPageState extends State<MapPage> {
                 coordinate:
                     const LatLng(49.457647152564334, 11.076190602176172),
               ),
-              MapboxAutoTranslateItem(
+              MapboxAutoTransformItem(
                 child: Container(
                   height: 100,
                   width: 100,

@@ -45,7 +45,7 @@ class MapboxItem extends MapboxItemBuilder {
         );
 }
 
-class MapboxAutoTranslateItem extends MapboxItemBuilder {
+class MapboxAutoTransformItem extends MapboxItemBuilder {
   final Widget child;
   final bool zoomEnabled;
   final bool bearingEnabled;
@@ -56,7 +56,7 @@ class MapboxAutoTranslateItem extends MapboxItemBuilder {
   static _expZoom(double factor, double zoom, double anchor) =>
       pow(factor, zoom - anchor);
 
-  MapboxAutoTranslateItem({
+  MapboxAutoTransformItem({
     required this.child,
     required super.coordinate,
     super.size,
