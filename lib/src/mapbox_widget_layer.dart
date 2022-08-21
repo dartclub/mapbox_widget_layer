@@ -159,6 +159,7 @@ class _MapboxWidgetLayerState extends State<MapboxWidgetLayer> {
     }
   }
 
+  // ignore: unused_element
   void _onCameraIdleCallback() {
     _updateMarkerPosition();
   }
@@ -185,6 +186,7 @@ class _MapboxWidgetLayerState extends State<MapboxWidgetLayer> {
     });
   }
 
+  // ignore: unused_element
   void _measurePerformance() {
     final trial = 10;
     final batches = [500, 1000, 1500, 2000, 2500, 3000];
