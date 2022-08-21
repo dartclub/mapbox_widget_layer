@@ -51,6 +51,16 @@ class _MapPageState extends State<MapPage> {
           MapboxWidgetLayer(
             controllerFuture: completer.future,
             items: [
+              MapboxAutoTransformItem(
+                child: Container(
+                  height: 100,
+                  width: 100,
+                  color: Colors.green[200],
+                  child: const Center(child: Text('auto')),
+                ),
+                size: const Size(100, 100),
+                coordinate: const LatLng(49.45750295375467, 11.076125061775054),
+              ),
               MapboxItem(
                 child: Container(
                   height: 100,
@@ -63,10 +73,10 @@ class _MapPageState extends State<MapPage> {
               ),
               MapboxItemBuilder(
                 builder: (context, screenPosition) {
-                  debugPrint('${screenPosition.screenPosition}');
-                  debugPrint('${screenPosition.zoom}');
-                  debugPrint('${screenPosition.bearing}');
-                  debugPrint('${screenPosition.tilt}');
+                  //debugPrint('${screenPosition.screenPosition}');
+                  //debugPrint('${screenPosition.zoom}');
+                  //debugPrint('${screenPosition.bearing}');
+                  //debugPrint('${screenPosition.tilt}');
                   return Container(
                     height: 100,
                     width: 100,
@@ -77,16 +87,6 @@ class _MapPageState extends State<MapPage> {
                 size: const Size(100, 100),
                 coordinate:
                     const LatLng(49.457647152564334, 11.076190602176172),
-              ),
-              MapboxAutoTransformItem(
-                child: Container(
-                  height: 100,
-                  width: 100,
-                  color: Colors.green[200],
-                  child: const Center(child: Text('auto')),
-                ),
-                size: const Size(100, 100),
-                coordinate: const LatLng(49.45750295375467, 11.076125061775054),
               ),
             ],
           ),
