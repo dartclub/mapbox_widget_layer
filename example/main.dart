@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:mapbox_gl/mapbox_gl.dart';
 import 'package:mapbox_widget_layer/mapbox_widget_layer.dart';
 
-class MapboxWithCustomLayer extends StatelessWidget {
-  MapboxWithCustomLayer({Key? key}) : super(key: key);
+class MapboxWithWidgetLayer extends StatelessWidget {
+  MapboxWithWidgetLayer({Key? key}) : super(key: key);
   final completer = Completer<MapboxMapController>();
 
   @override
@@ -16,10 +16,11 @@ class MapboxWithCustomLayer extends StatelessWidget {
           initialCameraPosition: CameraPosition(target: LatLng(0, 0)),
           onMapCreated: (controller) => completer.complete(controller),
         ),
-        MapboxCustomWidgetLayer(
+        MapboxWidgetLayer(
+          onMapInteractive: (contorller) {},
           controllerFuture: completer.future,
           items: [
-            MapboxCustomItem(
+            MapboxItem(
               coordinate: LatLng(0, 0),
               child: Text('Custom Label'),
             ),

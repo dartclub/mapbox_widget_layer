@@ -1,1 +1,1 @@
-export 'src/custom_layer.dart';
+export 'src/mapbox_widget_layer.dart';

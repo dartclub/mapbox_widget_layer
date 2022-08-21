@@ -9,7 +9,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  mapbox_gl: ^0.14.0
+  mapbox_gl: ^0.16.0
   turf: ^0.0.7
   pointer_interceptor: ^0.9.3
 
