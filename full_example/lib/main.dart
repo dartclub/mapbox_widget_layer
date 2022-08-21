@@ -44,6 +44,7 @@ class _MapPageState extends State<MapPage> {
             accessToken: accessToken, // create a credentials.dart file
             initialCameraPosition: const CameraPosition(
               target: LatLng(49.457647152564334, 11.076190602176172),
+              zoom: 18,
             ),
             onMapCreated: (controller) => completer.complete(controller),
           ),
@@ -61,12 +62,18 @@ class _MapPageState extends State<MapPage> {
                 coordinate: const LatLng(49.45800162760231, 11.076150534247994),
               ),
               MapboxItemBuilder(
-                builder: (_, __) => Container(
-                  height: 100,
-                  width: 100,
-                  color: Colors.blue[200],
-                  child: const Center(child: Text('builder')),
-                ),
+                builder: (context, screenPosition) {
+                  debugPrint('${screenPosition.screenPosition}');
+                  debugPrint('${screenPosition.zoom}');
+                  debugPrint('${screenPosition.bearing}');
+                  debugPrint('${screenPosition.tilt}');
+                  return Container(
+                    height: 100,
+                    width: 100,
+                    color: Colors.blue[200],
+                    child: const Center(child: Text('builder')),
+                  );
+                },
                 size: const Size(100, 100),
                 coordinate:
                     const LatLng(49.457647152564334, 11.076190602176172),

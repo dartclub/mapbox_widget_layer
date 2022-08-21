@@ -50,6 +50,11 @@ class MapboxAutoTranslateItem extends MapboxItemBuilder {
   final bool zoomEnabled;
   final bool bearingEnabled;
   final bool tiltEnabled;
+  final double zoomFactor;
+  final double zoomBase;
+
+  static _expZoom(double factor, double zoom, double anchor) =>
+      pow(factor, zoom - anchor);
 
   MapboxAutoTranslateItem({
     required this.child,
@@ -58,21 +63,25 @@ class MapboxAutoTranslateItem extends MapboxItemBuilder {
     this.zoomEnabled = true,
     this.bearingEnabled = true,
     this.tiltEnabled = true,
+    this.zoomFactor = 2,
+    this.zoomBase = 18,
   }) : super(builder: (context, screenPosition) {
           return Transform(
             child: child,
             alignment: FractionalOffset.center,
             transform: Matrix4.identity()
               ..rotateX(screenPosition.tilt / 360 * (2 * pi))
-              ..rotateY(screenPosition.bearing / 360 * (2 * pi))
-              ..scale(screenPosition.zoom / 22, screenPosition.zoom / 22),
+              ..rotateZ(-screenPosition.bearing / 360 * (2 * pi))
+              ..scale(
+                _expZoom(zoomFactor, screenPosition.zoom, zoomBase),
+                _expZoom(zoomFactor, screenPosition.zoom, zoomBase),
+              ),
           );
         });
 }
 
 class MapboxWidget extends StatefulWidget {
-  final Point initialScreenPosition;
-  final CameraPosition initialPosition;
+  final MapboxWidgetScreenPosition initialScreenPosition;
   final LatLng coordinate;
   final void Function(MapboxWidgetState) addMarkerState;
   final MapboxWidgetBuilderFunction childBuilder;
@@ -81,7 +90,6 @@ class MapboxWidget extends StatefulWidget {
   MapboxWidget({
     Key? key,
     required this.initialScreenPosition,
-    required this.initialPosition,
     required this.coordinate,
     required this.addMarkerState,
     required this.childBuilder,
@@ -102,6 +110,7 @@ class MapboxWidgetState extends State<MapboxWidget> {
 
   @override
   void initState() {
+    _screenPosition = widget.initialScreenPosition;
     super.initState();
   }
 

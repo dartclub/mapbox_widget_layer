@@ -63,17 +63,24 @@ class _MapboxWidgetLayerState extends State<MapboxWidgetLayer> {
     return index;
   }
 
-  Future<MapboxWidget> _newWidgetFromItem(MapboxItemBuilder item,
-      Function(MapboxWidgetState state) updateMarkerState) async {
+  Future<MapboxWidget> _newWidgetFromItem(
+    MapboxItemBuilder item,
+    Function(MapboxWidgetState state) updateMarkerState,
+  ) async {
     var val = await _mapController.toScreenLocation(item.coordinate);
+    var cameraPos = _mapController.cameraPosition!;
     var point = Point<double>(val.x as double, val.y as double);
 
     return MapboxWidget(
       size: item.size,
       childBuilder: item.builder,
       coordinate: item.coordinate,
-      initialScreenPosition: point,
-      initialPosition: _mapController.cameraPosition!,
+      initialScreenPosition: MapboxWidgetScreenPosition(
+        screenPosition: point,
+        zoom: cameraPos.zoom,
+        bearing: cameraPos.bearing,
+        tilt: cameraPos.tilt,
+      ),
       addMarkerState: updateMarkerState,
     );
   }
